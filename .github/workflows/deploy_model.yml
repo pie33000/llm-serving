@@ -1,0 +1,27 @@
+name: Python Package using Conda
+
+on: [push]
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-latest
+    env:
+      MODAL_TOKEN_ID: ${{ secrets.token_id }}
+      MODAL_TOKEN_SECRET: ${{ secrets.token_secret }}
+      GPU_NAME: "T4"
+      MODEL_NAME: "TheBloke/OpenOrca-Zephyr-7B-AWQ"
+      IS_QUANTIZED: "False"
+      APP_NAME: "test_e2e"
+      HF_TOKEN: ${{ secrets.HF_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.11"
+      - name: Install dependencies
+        run: |
+          pip install modal
+      - name: Install dependencies
+        run: |
+          modal run serve_local_llm.py --input "What do to in NYC?"
